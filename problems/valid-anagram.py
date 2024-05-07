@@ -47,6 +47,52 @@ class Solution(object):
         #   1. If len(s) < len(t), don't do any key-value pair comparison and straightaway return alse
         #   2. Must do None check for Python dict before trying to access - `if key not in dict:`
 
+    def isAnagram_CountSort(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        # Nice O(N) (or O(1) if String is implemented as an object with a convenient count property) time efficiency escape clause
+        if len(s) != len(t):
+            return False
+
+        s_ascii_max = 0
+        t_ascii_max = 0
+
+        # O(N) time efficiency, O(1) space efficiency - In the one for-loop, cast characters into ASCII code and find max element for each string
+        for i in range(len(s)):
+            s_ascii = ord(s[i])
+            t_ascii = ord(t[i])
+            s[i] = s_ascii
+            t[i] = t_ascii
+            if s_ascii > s_ascii_max:
+                s_ascii_max = s_ascii
+            if t_ascii > t_ascii_max:
+                t_ascii_max = t_ascii
+
+        # Another escape clause
+        if s_ascii_max != t_ascii_max:
+            return False
+
+        # O(M) space efficiency, where M == max(s_ascii_max, t_ascii_max)
+        s_countArray = [0] * (s_ascii_max + 1)
+        t_countArray = [0] * (t_ascii_max + 1)
+
+        # O(N) time efficiency to populate initial count array
+        for ascii_code in s:
+            s_countArray[ascii_code] += 1
+        for ascii_code in t:
+            t_countArray[ascii_code] += 1
+        
+        # O(N) time efficiency to store cumulative values
+        for i in range(len(s)):
+            
+
+        # count_array
+
+        
+
 
 solution = Solution()
 result = solution.isAnagram("rat", "car")
