@@ -57,6 +57,8 @@ class Solution(object):
         if len(s) != len(t):
             return False
 
+        s_ascii_list = []
+        t_ascii_list = []
         s_ascii_max = 0
         t_ascii_max = 0
 
@@ -64,8 +66,8 @@ class Solution(object):
         for i in range(len(s)):
             s_ascii = ord(s[i])
             t_ascii = ord(t[i])
-            s[i] = s_ascii
-            t[i] = t_ascii
+            s_ascii_list.append(s_ascii)
+            t_ascii_list.append(t_ascii)
             if s_ascii > s_ascii_max:
                 s_ascii_max = s_ascii
             if t_ascii > t_ascii_max:
@@ -80,20 +82,18 @@ class Solution(object):
         t_countArray = [0] * (t_ascii_max + 1)
 
         # O(N) time efficiency to populate initial count array
-        for ascii_code in s:
+        for ascii_code in s_ascii_list:
             s_countArray[ascii_code] += 1
-        for ascii_code in t:
+        for ascii_code in t_ascii_list:
             t_countArray[ascii_code] += 1
+
+        # Don't actually need to do the entire count sort implementation, just need to get the countArray for both strings and compare them - still O(M + N) time and space efficiency, where N == max(len(s), len(t))
+        for i in range(len(s_countArray)):
+            if s_countArray[i] != t_countArray[i]:
+                return False
         
-        # O(N) time efficiency to store cumulative values
-        for i in range(len(s)):
-            
-
-        # count_array
-
-        
-
+        return True        
 
 solution = Solution()
-result = solution.isAnagram("rat", "car")
+result = solution.isAnagram_CountSort("ba", "ab")
 print(result)
