@@ -7,6 +7,7 @@
 # I am reading about count sort which offers O(N) space efficiency
 
 class Solution(object):
+    # Seems like this offers the most convenient API, but Leetcode is not rewarding it - 48% percentile for time, 10% percentile for space 
     def isAnagram_HashmapImproved(self, s, t):
         if len(s) != len(t):
             return False
@@ -18,7 +19,7 @@ class Solution(object):
         for i in range(len(s)):
             # dict.get() - nice API to return default method instead of using two lines to do a `is None` check
             s_counter[s[i]] = 1 + s_counter.get(s[i], 0)
-            t_counter[t[i]] = 1 + s_counter.get(t[i], 0)
+            t_counter[t[i]] = 1 + t_counter.get(t[i], 0)
 
         # Iterate through counter
         for key in s_counter:
@@ -27,12 +28,11 @@ class Solution(object):
 
         return True
 
-
     # Lmao at this too - well neither this nor the 'sorted' one-liner approches are rewarded in Leetcode
     # Counter is dict subclass (inherit from dict) - store object as keys and counts as values
     # https://realpython.com/python-counter/#getting-started-with-pythons-counter
-    # def isAnagram_Counter(self, s, t):
-    #     return Counter(s) == Counter(t)
+    def isAnagram_Counter(self, s, t):
+        return Counter(s) == Counter(t)
 
     # Lmao at this
     def isAnagram_Sort(self, s, t):
@@ -42,6 +42,7 @@ class Solution(object):
         return sorted(s) == sorted(t)
 
     # Hashmap solution - O(N) time efficiency, O(N) space efficiency
+    # 90th percentile for runtime and memory - Seemed to be penalized for dict.get() API
     def isAnagram_Hashmap(self, s, t):
         """
         :type s: str
@@ -68,10 +69,10 @@ class Solution(object):
                 t_dict[char] = 1
 
         # Now compare the hashmaps - O(N) time efficiency
-        for key, value in s_dict.items():
+        for key in s_dict:
             if key not in t_dict:
                 return False
-            if t_dict[key] != value:
+            if t_dict[key] != s_dict[key]:
                 return False
         
         return True
@@ -129,5 +130,5 @@ class Solution(object):
         return True        
 
 solution = Solution()
-result = solution.isAnagram_CountSort("ba", "ab")
+result = solution.isAnagram_HashmapImproved("ba", "ab")
 print(result)
