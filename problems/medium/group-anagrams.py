@@ -6,7 +6,54 @@
 # Then we need to go through the array, and figure out which grouping belongs
 
 class Solution(object):
-    # This solution is very bad lmao
+
+    # Ok slightly better, getting 30-40% runtime and 25% memory. Mmmm...would rather do another question than try to optimize this further
+    def groupAnagrams_v2(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+
+        # So in Python, a list itself cannot be a map key, but a tuple of a list can
+        # (frequencyCountArray) => [grouping]
+        # dict = {}
+        dict = {}
+
+        # O(# of strings * length of strings)
+        for current_string in strs:
+            # Don't seem to be able to convert dict into a hashable key, so will need to use a list
+            frequency_count = [0] * 26
+            for current_character in current_string:
+                frequency_count[ord(current_character) - ord("a")] += 1
+            
+            # Convert frequency_count into hashable form
+            # Check for frequency count in dict
+            # dict[tuple(frequency_count)].append(current_string)
+            hash = tuple(frequency_count)
+            if hash in dict:
+                dict[hash].append(current_string)
+            else:
+                dict[hash] = [current_string]
+        
+        return dict.values()
+
+    # Hmm yea ok the lessons here are
+    # - In Python, you can use a tuple of a list as the dict key, but there doesn't seem to be a way to use a dict itself as a dict key
+    #   - So the frequency_count list can be the dict key
+    # - Use list(dict.values()) to cast into a list of the dict values
+
+    # Big wrong ideas I had
+    # - No need to use a class abstraction over the grouping - this is a code smell that the solution is getting too complicated
+    # - Don't need to anchor to valid-anagram solution, in fact can use this solution for valid-anagram instead
+
+    # Big correct ideas I had
+    # - One single pass through 'strs'
+    # - Store a list of strings for each anagram grouping, as a dict value
+    # - We do want to use a representation of an anagram grouping to serve as the dict key, 
+
+    # This solution is very bad lmao - <10% percentile for both runtime and memory
+    # Had the correct general thoughts - but the implementation is bad
+    # We still need a frequency count, but the entire frequency count itself can be the map key
     def groupAnagrams(self, strs):
         """
         :type strs: List[str]
@@ -102,6 +149,7 @@ class AnagramGrouping(object):
         return True
 
 solution = Solution()
-print(solution.groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
-print(solution.groupAnagrams([""]))
-print(solution.groupAnagrams(["a"]))
+print(solution.groupAnagrams_v2(["eat","tea","tan","ate","nat","bat"]))
+print(solution.groupAnagrams_v2([""]))
+print(solution.groupAnagrams_v2(["a"]))
+print(solution.groupAnagrams_v2(["ddddddddddg","dgggggggggg"]))
