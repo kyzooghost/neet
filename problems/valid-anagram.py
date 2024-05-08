@@ -77,7 +77,7 @@ class Solution(object):
         
         return True
 
-        # Overall O(N) space efficiency and O(N) time efficiency
+        # Overall O(S + T) space efficiency and O(S + T) time efficiency
         # Two edge cases to note here
         #   1. If len(s) < len(t), don't do any key-value pair comparison and straightaway return alse
         #   2. Must do None check for Python dict before trying to access - `if key not in dict:`
