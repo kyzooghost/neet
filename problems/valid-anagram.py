@@ -7,6 +7,40 @@
 # I am reading about count sort which offers O(N) space efficiency
 
 class Solution(object):
+    def isAnagram_HashmapImproved(self, s, t):
+        if len(s) != len(t):
+            return False
+
+        # Nice syntax to declare multiple variables at the one time
+        s_counter, t_counter = {}, {}
+
+        # Populate counter
+        for i in range(len(s)):
+            # dict.get() - nice API to return default method instead of using two lines to do a `is None` check
+            s_counter[s[i]] = 1 + s_counter.get(s[i], 0)
+            t_counter[t[i]] = 1 + s_counter.get(t[i], 0)
+
+        # Iterate through counter
+        for key in s_counter:
+            if s_counter[key] != t_counter.get(key, 0):
+                return False
+
+        return True
+
+
+    # Lmao at this too - well neither this nor the 'sorted' one-liner approches are rewarded in Leetcode
+    # Counter is dict subclass (inherit from dict) - store object as keys and counts as values
+    # https://realpython.com/python-counter/#getting-started-with-pythons-counter
+    # def isAnagram_Counter(self, s, t):
+    #     return Counter(s) == Counter(t)
+
+    # Lmao at this
+    def isAnagram_Sort(self, s, t):
+        # Timsort for Python 2.3-3.10, Powersort for 3.11
+        # Time complexity - best case O(N), average & worst case O(N log N)
+        # Space complexity - O(N)
+        return sorted(s) == sorted(t)
+
     # Hashmap solution - O(N) time efficiency, O(N) space efficiency
     def isAnagram_Hashmap(self, s, t):
         """
@@ -86,14 +120,12 @@ class Solution(object):
             t_countArray[ascii_code] += 1
         
         # O(N) time efficiency to store cumulative values
-        for i in range(len(s)):
+        # for i in range(len(s)):
             
 
         # count_array
 
-        
-
 
 solution = Solution()
-result = solution.isAnagram("rat", "car")
+result = solution.isAnagram_HashmapImproved("rat", "car")
 print(result)
