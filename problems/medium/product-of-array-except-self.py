@@ -1,70 +1,86 @@
-# Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
-# The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
-# You must write an algorithm that runs in O(n) time and without using the division operation.
 
 # Hmm no division operation...run in O(n) time
 # Can think of an O(N^2) solution
-# One pass, and multiply everything is 
-# Could do in two passes if can divide, but alas can't
 # Can we store intermediate computations in a map?
 
-# What is this 32-bit integer constraint?
-
 class Solution(object):
+    # 60% runtime, 73% memory
+    def productExceptSelf_Neet(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        resp = [1] * len(nums)
+
+        prefix, postfix = 1, 1
+        for i in range(len(nums)):
+            resp[i] = prefix
+            prefix *= nums[i]
+
+        for i in range(len(nums) - 1, -1, -1):
+            resp[i] *= postfix
+            postfix *= nums[i]
+        
+        return resp
+
+    # 20% runtime, 50% memory
+    def productExceptSelf_LessSpace(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        # Output array does not count as extra space
+        # Store prefix array in resp
+        resp = [1] * len(nums)
+
+        running_prefix, running_postfix = 1, 1
+        for i in range(len(nums)):
+            if i != 0:
+                resp[i] *= running_prefix
+            running_prefix *= nums[i]
+
+        for i in range(len(nums) - 1, -1, -1):
+            if i != len(nums) - 1:
+                resp[i] *= running_postfix
+            running_postfix *= nums[i]
+        
+        return resp
+
+
+    # Sigh went down the entire wrong rabbit hole - it's one of those non-intuitive answers that is so simple when you see/get it
+    # O(N) time and space complexity. 11% time, 14% memory
     def productExceptSelf(self, nums):
         """
         :type nums: List[int]
         :rtype: List[int]
         """
 
-        # Need multiple levels of caches - but how to store each cache level, and how to represent each cache level?
+        prefix, postfix = [1] * len(nums), [1] * len(nums)
 
-        product_caches = [nums]
-        cache_size = len(nums)
+        for i in range(len(nums)):
+            reverse_i = len(nums) - i - 1
+            if i == 0:
+                prefix[i] = nums[i]
+                postfix[reverse_i] = nums[reverse_i]
+            else:
+                prefix[i] = nums[i] * prefix[i - 1]
+                postfix[reverse_i] = nums[reverse_i] * postfix[reverse_i + 1]
 
-        while cache_size > 2:
-            last_cache = product_caches[-1]
-            new_cache = []
+        resp = [0] * len(nums)
+        for i in range(len(nums)):
+            current_prefix = 1
+            current_postfix = 1
+            if i > 0:
+                current_prefix = prefix[i - 1]
+            if i < len(nums) - 1:
+                current_postfix = postfix[i + 1]
+            resp[i] = current_prefix * current_postfix
 
-            # Fill in new_cache
-            last_cache_length = len(last_cache)
-            i = 0
-            while i < last_cache_length:
-                if i == last_cache_length:
-                    break
-                if i + 1 < last_cache_length:
-                    product = last_cache[i] * last_cache[i + 1]
-                    new_cache.append(product)
-                    i += 2
-                else:
-                    new_cache.append(last_cache[i])
-                    i += 1
-            product_caches.append(new_cache)
-            cache_size = len(new_cache)
-
-        # Create binary heap
-        heap_levels = len(product_caches) + 1
-        heap = [None]
-        for i in range(len(product_caches) - 1, -1, -1):
-            heap.extend(product_caches[i])
-
-        # for i in range()
-
-
-        resp = [1] * len(nums)
-
-        print(product_caches)
-        print(heap)
-
-
-        # for i in range(len(sparse_caches)):
-            # sparse_cache = i
-            # complement_index = 
-            # i is also the depth
-            # resp[i] *= 1
+        return resp
 
 
 solution = Solution()
-print(solution.productExceptSelf([1, 2, 3, 4, 5, 6]))
+print(solution.productExceptSelf_LessSpace([1, 2, 3, 4, 5, 6]))
+print(solution.productExceptSelf_LessSpace([1, 2, 3, 4]))
+print(solution.productExceptSelf_LessSpace([-1,1,0,-3,3]))
 
-        
