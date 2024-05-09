@@ -6,6 +6,8 @@
 # Let's implement that
 
 class Solution(object):
+
+    # 44% runtime, 5% memory
     def longestConsecutive(self, nums):
         """
         :type nums: List[int]
