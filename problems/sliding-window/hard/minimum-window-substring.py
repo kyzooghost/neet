@@ -115,9 +115,59 @@ class Solution(object):
 
         return resp
 
+    # 23% runtime, 80% memory
+    # So same sliding window as before
+    # Trick is O(1) method for finding if contain t subset
+        # Keep track of # of keys matched, and update appropriately 
+    def minWindow_Neet(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        resp = ""
+        min_length = 10**5
+        if len(t) > len(s):
+            return resp
+        
+        # Populate t_dict
+        t_dict, window_dict = {}, {}
+        for char in t:
+            t_dict[char] = t_dict.get(char, 0) + 1
+        
+        window_matches, t_requirements = 0, len(t_dict)
+
+        l, r = 0, 0
+        while r < len(s):
+            window_dict[s[r]] = window_dict.get(s[r], 0) + 1
+
+            # Update window_matches
+            if s[r] in t_dict and window_dict[s[r]] == t_dict[s[r]]:
+                window_matches += 1
+
+            # Found substring -> move L pointer
+            if window_matches == t_requirements:
+                while window_matches == t_requirements and l <= r:
+                    # Update resp
+                    if r - l + 1 < min_length:
+                        min_length = r - l + 1
+                        resp = s[l:r + 1]
+
+                    # Move L pointer
+                    window_dict[s[l]] -= 1
+                    if s[l] in t_dict and window_dict[s[l]] < t_dict[s[l]]:
+                        window_matches -= 1
+                    l += 1
+
+            r += 1
+
+        return resp
+
 solution = Solution()
-print(solution.minWindow_v1("ADOBECODEBANC", "ABC"))
-print(solution.minWindow("a", "a"))
-print(solution.minWindow("a", "aa"))
-print(solution.minWindow_v1("ab", "b"))
+print(solution.minWindow_Neet("ADOBECODEBANC", "ABC"))
+print(solution.minWindow_Neet("a", "a"))
+print(solution.minWindow_Neet("a", "aa"))
+print(solution.minWindow_Neet("ab", "b"))
+print(solution.minWindow_Neet("aaaaaaaaaaaabbbbbcdd", "abcdd"))
+
 
