@@ -12,15 +12,17 @@
 # But how do we check if a window of s, contains any permutation of t?
 
 class Solution(object):
+    # 27 minutes to come up with O(M^2 * N) solution that passes 265/268 cases and gets Time Limit Exceeded lol
+    # Can I use sliding windows instead of a nested for loop to make an O(MN) solution?
+    # Well, sliding window is O(N) and this I have implemented optimized brute force which is still O(N^2)
     def minWindow(self, s, t):
         """
         :type s: str
         :type t: str
         :rtype: str
         """
-        resp = ""
         if len(t) > len(s):
-            return resp
+            return ""
         
         # Populate t_dict
         t_dict = {}
@@ -57,11 +59,65 @@ class Solution(object):
                 r += 1
 
             window_size += 1
+        
+        return ""
+
+    # Use the Leetcode website hints of how to move the sliding windows
+    # 5% runtime, 80% memory
+    # O(MN) - N for sliding window, M for substring search
+    def minWindow_v1(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        resp = ""
+        min_length = 10**5
+        if len(t) > len(s):
+            return resp
+        
+        # Populate t_dict
+        t_dict = {}
+        for char in t:
+            t_dict[char] = t_dict.get(char, 0) + 1
+        
+        min_window_size = len(t)
+        
+        # O(M) subroutine
+        def is_contain_t(dict):
+            for char, count in t_dict.items():
+                if dict.get(char, 0) < count:
+                    return False
+            return True
+        
+        l, r = 0, 0
+
+        current_dict = {}
+
+        # Shift right pointer until we have covered all characters in it
+        while r < len(s):
+            current_dict[s[r]] = current_dict.get(s[r], 0) + 1
+
+            # Shift left pointer while we have covered all characters in t
+            while l < r - min_window_size + 1 and is_contain_t(current_dict) == True:
+                if r - l + 1 < min_length:
+                    min_length = r - l + 1
+                    resp = s[l:r + 1]
+                
+                current_dict[s[l]] -= 1
+                l += 1
+
+            if is_contain_t(current_dict) == True and r - l + 1 < min_length:
+                min_length = r - l + 1
+                resp = s[l:r + 1]
+
+            r += 1
 
         return resp
-        
+
 solution = Solution()
-print(solution.minWindow("ADOBECODEBANC", "ABC"))
+print(solution.minWindow_v1("ADOBECODEBANC", "ABC"))
 print(solution.minWindow("a", "a"))
 print(solution.minWindow("a", "aa"))
+print(solution.minWindow_v1("ab", "b"))
 
