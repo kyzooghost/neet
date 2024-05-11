@@ -151,6 +151,9 @@ class Solution(object):
         while r < length:
             count[s[r]] = count.get(s[r], 0) + 1
             maxf = max(maxf, count[s[r]])
+
+            #maxf could be bigger than real count...
+            # If it is, then l will overshoot from prior algorithm -> does this matter?
             while k + maxf < r - l + 1:
                 count[s[l]] -= 1
                 l += 1
