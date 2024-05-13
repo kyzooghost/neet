@@ -22,10 +22,75 @@ class ListNode(object):
 
 class Solution(object):
 
+    # 20% runtime, 18% memory
+    # This is my favourite - just two parameters for recursive call, but 1 temporary parameter for next inside
+    def reverseList_InPlaceRecursiveV2(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
 
-    # 65 runtime, 6% memory
+        def reverse(prev, cur):
+            if cur is None:
+                return prev
+            else:
+                next_node = cur.next
+                cur.next = prev
+                return reverse(cur, next_node)
+        
+        return reverse(None, head)
+
+    # 16% runtime, 94% memory
+    def reverseList_Neet(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+
+        if head is None:
+            return head
+        
+        prev_node = None
+
+        while head is not None:
+            next_node = head.next
+            # Reverse pointer
+            head.next = prev_node
+            prev_node = head
+            head = next_node
+
+        return prev_node
+
+    # 45% runtime, 48% memory
+    # Hmm, also ok to return prev, but still weird edge cases on head and tail
+    def reverseList_InPlaceV2(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+
+        if head is None:
+            return head
+        
+        prev_node, next_node = None, head
+
+        while head is not None:
+            next_node = head.next
+            # Reverse pointer
+            head.next = prev_node
+            prev_node = head
+            head = next_node
+
+        if head is None:
+            return prev_node
+        else:
+            return head
+
+
+    # 65% runtime, 6% memory
     # Hahahaha recursive was much easier to reason through, but is more memory intensive
     # Python doesn't support tail call recursion mm
+    # Should probably start with the recursive case first - easiest to implement
     def reverseList_InPlaceRecursive(self, head):
         """
         :type head: ListNode
@@ -45,7 +110,6 @@ class Solution(object):
                 return reverse(current_node, next_node, next_node.next)
 
         return reverse(None, head, head.next)
-
 
     # 86% runtime, 77% memory
     # Urghhhh...this took way too long to work out for an easy, maybe up to 2 hrs
