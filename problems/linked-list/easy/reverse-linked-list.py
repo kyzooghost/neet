@@ -22,45 +22,42 @@ class ListNode(object):
 
 class Solution(object):
 
+
+    # 86% runtime, 77% memory
+    # Urghhhh...this took way too long to work out for an easy, maybe up to 2 hrs
+    # Key points
+    #   Edge case - None, Single LinkedNode
+    #   What happens to the original head in happy case - .next becomes None
+    #   What happens to the original tail in happy case - .next was None, becomes something
+    #   When we do stop - When next_node becomes None
+    #   How many pointers? - 3, prev + current + next
     def reverseList_InPlace(self, head):
         """
         :type head: ListNode
         :rtype: ListNode
         """
 
-        # [1, 2]
-
         if head is None:
             return head
+        
+        prev_node, next_node = head, head.next
+        head.next = None
 
-        # 1
-        # 2
-        # None
-        # 2 -> 1
-        # 
+        while next_node is not None:
+            # Change current pointer
+            head = next_node
 
-        # Iterate to tail
-        while head.next is not None:
+            # Update next pointer
+            next_node = head.next
 
-            # Pointer to last head
-            last_head = head
+            # Reverse current pointer
+            head.next = prev_node
 
-            # Pointer to current head
-            head = head.next
+            # Update prev_node
+            prev_node = head
 
-            # Pointer to next head, can be None
-            next_head = head.next
-
-            # Change current head pointer
-            head.next = last_head
-
-            # If no next head, we are at tail -> stop
-            if (next_head == None):
-                return head
-            # Else go to next head
-            else:
-                head = head.next
-
+        return head
+    
     # 7% runtime, 13% memory
     # Feel like I took way too long to do an easy, close to 30 minutes
     # Feel like I am very clumsy with interacting with a LinkedList in Python, so need more study and practice here
