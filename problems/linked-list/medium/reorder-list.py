@@ -13,6 +13,45 @@
 #         self.next = next
 
 class Solution(object):
+
+    # 92% runtime, 20% memory
+    # Ok much more streamlined 'find-halfway' algorithm 
+    # Set both midway nodes to point to None
+    def reorderList_Neet(self, head):
+        """
+        :type head: ListNode
+        :rtype: None Do not return anything, modify head in-place instead.
+        """
+        # If start fast at head.next -> middle for odd numbers, left-half for even numbers
+        # If start fast at head -> middle for odd numbers, right-half for even numbers
+        slow, fast = head, head.next
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # Slow is middle (for odd) or left of middle (for even)
+        
+        # Set middle to None, reverse second half
+        second = slow.next
+        slow.next = None
+        prev = None
+        while second:
+            tmp = second.next
+            second.next = prev
+            prev = second
+            second = tmp
+        
+        first, second = head, prev
+
+        while second:
+            tmp1, tmp2 = first.next, second.next
+            first.next = second
+            second.next = tmp1
+            first, second = tmp1, tmp2
+
+        return head
+
+
     # 74% runtime, 13% memory
     # Ok had the correct idea almost straight away, but I took way too long to implement. Not timed as couldn't sit down for entire time, but having to walk through the two half lists took too long
     def reorderList(self, head):
