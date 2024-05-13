@@ -23,6 +23,30 @@ class ListNode(object):
 class Solution(object):
 
 
+    # 65 runtime, 6% memory
+    # Hahahaha recursive was much easier to reason through, but is more memory intensive
+    # Python doesn't support tail call recursion mm
+    def reverseList_InPlaceRecursive(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+
+        if head is None:
+            return head
+
+        def reverse(prev_node, current_node, next_node):
+            # Reverse pointer
+            current_node.next = prev_node
+
+            if next_node == None:
+                return current_node
+            else:
+                return reverse(current_node, next_node, next_node.next)
+
+        return reverse(None, head, head.next)
+
+
     # 86% runtime, 77% memory
     # Urghhhh...this took way too long to work out for an easy, maybe up to 2 hrs
     # Key points
