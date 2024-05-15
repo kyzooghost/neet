@@ -4,53 +4,98 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
-# Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+
 class Solution(object):
 
-    def isValidBST_IterativeV3(self, root):
+    def isValidBST_RecursiveV4(self, root):
         """
         :type root: TreeNode
         :rtype: bool
         """
-        # Lol inorder iterative requires a pointer
-        # Preorder you can initialize root in the stack, because root is first to visit
-        # You cannot initialize root to stack for inorder or postorder
-        ptr, stack, last_val = root, [], None
+    
+        # Ok we can use in-order traversal and O(N) space to do this
+        last_val = None
 
-        while stack:
-            stack.append(ptr)
-            while ptr.left:
-                ptr = ptr.left
-                stack.append(ptr)
+        def dfs(node):
+            l, r = True, True
+            if node.left:
+                l = dfs(node.left)
+            if last_val is not None and node.val <= last_val:
+                return False
+            last_val = node.val
+            if node.right:
+                r = dfs(node.right)
+            return l and r
+
+        return dfs(root)
+
+
+    # Where did I get stuck?
+        # 1. Not good enough to just compare node.val to node.left & node.right, violating node may be more than 1 level away
+        # 2. Wrong rabbit hole to obtain min and max of each subtree
+        # 3. float("inf") for infinity, float("-inf") for negative infinity
+        # 4. Haven't seen iterative implementation for inorder traversal before
+        # 5. Haven't used inorder traversal - either recursive or iterative - to collect numbers from a BST
+        # 6. Need to be more comfortable with letting the node pointer go to None. You just have to do null check at the start of each loop.
+        # 7. Even if you use inorder traversal, no need to keep entire val list, just the last val visited
+
+    # 89% runtime, 63% memory
+    # Damn...didn't even need to worry about inorder traversal
+    # Pass valid L + R boundary with each recursive call, and check against these in each call
+    def isValidBST_Neet(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        def valid(node, left, right):
+            if not node:
+                return True
+            if node.val >= right:
+                return False
+            if node.val <= left:
+                return False
             
+            return (valid(node.left, left, node.val) and
+                valid(node.right, node.val, right))
+        return valid(root, float("-inf"), float("inf"))
+
+
+    def isValidBST_RecursiveV3(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+
+        # 48% runtime, 7% memory - Ok does work but is pretty bad lol
+        # Just do in-order traversal and compare to last value traversed
+        # This is too complicated trying this 'compare min/max of entire subtree to current node or other subtree' approach. Wrong rabbit hole.
+        def dfs(node):
+            l_min, r_min = float("inf"), float("inf")
+            l_max, r_max = float("-inf"), float("-inf")
+            l_check, r_check = True, True
+
+            if node.left:
+                l_check, l_min, l_max = dfs(node.left)
+            if node.right:
+                r_check, r_min, r_max = dfs(node.right)
             
+            if l_max >= node.val or l_max >= r_min:
+                l_check = False
+            if r_min <= node.val or r_min <= l_max:
+                r_check = False
 
-                stack.append(ptr)
-
-        # while ptr or stack:
-        #     if ptr:
-        #         stack.append(ptr)
-        #         ptr = ptr.left
-        #     else:
-        #         ptr = stack.pop()
-        #         if last_val is not None:
-        #             if ptr.val <= last_val:
-        #                 return False
-        #         last_val = ptr.val
-        #         ptr = ptr.right
-
-
-        return True
-
-
+            return (
+                l_check and r_check,
+                min(node.val, l_min, r_min),
+                max(node.val, l_max, r_max),
+            )
+                
+        check, _, _  = dfs(root)
+        return check        
 
     # 62% runtime, 43% memory
     # Wow, inorder iterative is so different from preorder, need a ptr and I have to let it go to null?
+    # Sigh alright, accept that inorder iterative will not be as neat as preorder iterative - need to track a ptr variable and let it be null
     def isValidBST_IterativeV2(self, root):
         """
         :type root: TreeNode
@@ -63,13 +108,11 @@ class Solution(object):
                 ptr = ptr.left
             else:
                 ptr = stack.pop()
-                if last_val is not None:
-                    if ptr.val <= last_val:
-                        return False
+                if last_val is not None and ptr.val <= last_val:
+                    return False
                 last_val = ptr.val
                 ptr = ptr.right
         return True
-
 
     # 85% runtime, 43% memory
     def isValidBST_Iterative(self, root):
