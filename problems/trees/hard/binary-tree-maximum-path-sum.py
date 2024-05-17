@@ -4,6 +4,82 @@
 
 # Given the root of a binary tree, return the maximum path sum of any non-empty path.
 
+class Solution_V5(object):
+    # 60% memory, 20% runtime
+    # Ok you can reduce it to subtrees, but finding the max path in each subtree - max subpath for L and R
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.res = root.val
+
+        def dfs(node):
+            if not node:
+                return 0
+            l_max = max(dfs(node.left), 0)
+            r_max = max(dfs(node.right), 0)
+
+            self.res = max(self.res, node.val + l_max + r_max)
+            return max(0, node.val + max(l_max, r_max))
+
+        dfs(root)
+        return self.res
+
+
+class Solution_V4(object):
+    # 60% memory, 73% runtime
+    # Mmm yea ok so you can reduce it to finding l_max_path and r_max_path
+    # 60% runtime, 50% memory
+    def maxPathSum_Neet(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.res = root.val
+
+        def dfs(node):
+            if not node:
+                return 0
+            l_max = dfs(node.left)
+            r_max = dfs(node.right)
+            l_max = max(l_max, 0)
+            r_max = max(r_max, 0)
+            self.res = max(self.res, node.val + l_max + r_max)
+            return node.val + max(l_max, r_max)
+        dfs(root)
+        return self.res
+
+
+class Solution_V3(object):
+    # 60% memory, 73% runtime
+    # Mmm yea ok so you can reduce it to finding l_max_path and r_max_path
+    def maxPathSum_AfterVideo(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        self.res = float("-inf")
+
+        def dfs(node):
+            l_max_path, r_max_path = 0, 0
+
+            # Go into left
+            if node.left:
+                l_max_path = dfs(node.left)
+            if node.right:
+                r_max_path = dfs(node.right)
+
+            # Possibilities - node.val, node.val + L, node.val + R, node.val + L + R
+            self.res = max(node.val, node.val + l_max_path, node.val + r_max_path, node.val + l_max_path + r_max_path)
+
+            # Return max subpath contribution - node itself, nothing, node.val + L, node.val + R
+            return max(node.val, node.val + l_max_path, node.val + r_max_path, 0)
+
+        dfs(root)
+
+        return self.res
+
 
 class Solution_V2(object):
     # How can we do this in better than O(N^2) time
