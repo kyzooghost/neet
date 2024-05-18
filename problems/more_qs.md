@@ -1,1 +1,1 @@
-https://www.reddit.com/r/leetcode/comments/1cu3jcs/does_meta_want_quickselect_or_heap_solution_for/l4g6vdg?utm_medium=android_app&utm_source=share&context=3
+https://leetcode.com/discuss/interview-question/5098716/Meta-or-SWE-or-E5-Full-Loop-or-PASSED/
