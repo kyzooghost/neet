@@ -1,4 +1,33 @@
 from typing import List
+
+
+# Hmm interesting, so same tree conditions but different way of detecting a cycle
+# So cycle for undirected graph - self.visited as normal, but compare to 'prev' to prevent backtrack
+# Cycle for directed graph - self.visited + self.path (which reverts after recursive calls done)
+class Solution_AfterNeet:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # Another way for defaultdict(list)
+        adjacency = { i:[] for i in range(n) }
+        for i, j in edges:
+            adjacency[i].append(j)
+            adjacency[j].append(i)
+
+        def dfs(node, prev):
+            if node in self.visited:
+                return True
+            self.visited[node] = True
+            for i in adjacency.get(node, []):
+                if i != prev and dfs(i, node): return True
+            
+            return False
+
+        self.visited = {}
+        # Attempt DFS from single node
+        if dfs(0, -1): return False
+        if len(self.visited) != n: return False
+        
+        return True
+    
 # Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.
 
 # What is a tree? 
@@ -54,9 +83,11 @@ class Solution:
 n = 5
 edges1 = [[0, 1], [0, 2], [0, 3], [1, 4]]
 edges2 = [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]]
-sln = Solution()
-print(sln.validTree(n, edges1))
-print(sln.validTree(n, edges2))
-print(sln.validTree(4, [[0,1],[2,3]]))
+sln = Solution_AfterNeet()
+# print(sln.validTree(n, edges1))
+# print(sln.validTree(n, edges2))
+# print(sln.validTree(4, [[0,1],[2,3]]))
+print(sln.validTree(5, [[0,1],[0,2],[0,3],[1,4]]))
+
 
 
