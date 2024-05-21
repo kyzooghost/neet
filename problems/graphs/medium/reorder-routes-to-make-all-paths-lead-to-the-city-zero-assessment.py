@@ -50,8 +50,51 @@
 
 
 
-
 from collections import defaultdict
+
+
+# The key constraints here are that i.) There is only one edge between each node, and ii.) the nodes form a tree.
+# This means that if you treat the nodes as unidirected, a DFS starting from any node, will reach every other node
+# Also because it is a tree, it means there is only ever one path from node A to node B, for any nodes A and B
+# So each edge is the only edge from node 0 to node X
+# Therefore any edges you find in a DFS starting from node 0 are required, and hence the minimum will be the # of 'incorrect' direction edges you find on DFS from node 0
+
+# 41% runtime, 22% memory
+class Solution_V1(object):
+    def minReorder(self, n, connections):
+        """
+        :type n: int
+        :type connections: List[List[int]]
+        :rtype: int
+        """
+        # Build adjacency dict for unidirected graph
+        adjacency = defaultdict(list)
+        orig_direction = {}
+        for i, j in connections:
+            adjacency[i].append(j)
+            adjacency[j].append(i)
+            orig_direction[(i, j)] = True
+
+        self.visited = {}
+        def dfs(n):
+            resp = 0
+            self.visited[n] = True
+            for i in adjacency[n]:
+                if i not in self.visited:
+                    if (n, i) in orig_direction:
+                        resp += 1
+                    resp += dfs(i)
+            return resp
+
+        return dfs(0)
+
+
+
+sln = Solution_V1()
+print(sln.minReorder(0, 1))
+
+
+
 
 
 def solution(A, B):
@@ -84,8 +127,8 @@ def solution(A, B):
     # Start DFS from city 0
     return dfs(0)
 
-print(solution([0, 2, 3, 4], [1, 1, 4, 4]))
-print(solution([1, 6, 6, 3, 0, 5], [6, 2, 0, 0, 4, 0]))
-print(solution([0,1,1,1,1], [1,2,3,4,5]))
+# print(solution([0, 2, 3, 4], [1, 1, 4, 4]))
+# print(solution([1, 6, 6, 3, 0, 5], [6, 2, 0, 0, 4, 0]))
+# print(solution([0,1,1,1,1], [1,2,3,4,5]))
 
 
