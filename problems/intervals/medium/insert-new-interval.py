@@ -7,6 +7,37 @@
 # Return intervals after the insertion.
 # Note that you don't need to modify intervals in-place. You can make a new array and return it.
 
+# Dang styled by Neet, can't believe he did it in like 10 lines of code, and condensed it to three cases
+# 88% runtime, 40% memory
+class Solution_Neet(object):
+    def insert(self, intervals, newInterval):
+        """
+        :type intervals: List[List[int]]
+        :type newInterval: List[int]
+        :rtype: List[List[int]]
+        """
+        resp = []
+        
+        for i in range(len(intervals)):
+            # To the left -> append and return
+            if newInterval[1] < intervals[i][0]:
+                resp.append(newInterval)
+                return resp + intervals[i:]
+            # To the right -> pass
+            elif intervals[i][1] < newInterval[0]:
+                resp.append(intervals[i])
+            # Else merge, and go to next iteration
+            # Ahh...much easier to just merge into one big interval rather than trying to insert in the middle and popping merged intervals
+            # Merge and ditch current interval
+            else:
+                newInterval[0] = min(newInterval[0], intervals[i][0])
+                newInterval[1] = max(newInterval[1], intervals[i][1])
+
+        resp.append(newInterval)
+        return resp
+
+
+
 # 35% runtime, 92% memory
 # Sighhhhh first two attempts failed miserably. The problem is straightforward, implementation is not because there are quite a few edge cases
 # Had to refine the way I think about it
@@ -209,6 +240,7 @@ class Solution(object):
 
         return intervals
 
+
 sln = Solution_V3()
 print(sln.insert([[1,3],[4,6]],[2,5]))
 print(sln.insert([[1,2],[3,5],[9,10]],[6,7]))
@@ -216,11 +248,6 @@ print(sln.insert([[1,3],[4,6]],[2,7]))
 print(sln.insert([[1,3],[4,6]],[4,5]))
 print(sln.insert([],[4,5]))
 print(sln.insert([[1,5]],[1,7]))
-
-
-
-
-
 
 # Input: intervals = [[1,3],[4,6]], newInterval = [2,5]
 # Output: [[1,6]]
