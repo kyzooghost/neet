@@ -6,6 +6,29 @@
 # intervals[i].length == 2
 # 0 <= starti <= endi <= 104
 
+# Ok I didn't know how to sort an array of arrays in Python, so I discarded that approach
+# 92% runtime, 91% memory
+class Solution_AfterNeet(object):
+    def merge(self, intervals):
+        """
+        :type intervals: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        intervals.sort(key = lambda x: x[0])
+        resp = []
+        cur = intervals[0]
+        for i in range(1, len(intervals)):
+            # If overlap then merge, else append
+            if intervals[i][0] <= cur[1]:
+                # Should not need to handle left, because already sorted
+                cur[1] = max(cur[1], intervals[i][1])
+            # Not overlapping
+            else:
+                resp.append(cur)
+                cur = intervals[i]
+        resp.append(cur)
+        return resp
+
 # Do we need to sort?
 # No need to return sorted array
 # How to use code from insert?
@@ -74,15 +97,15 @@ class Solution(object):
 
         return resp
 
-sln = Solution()
-# print(sln.merge([[1,3],[1,5],[6,7]]))
-# print(sln.merge([[1,3],[2,6],[8,10],[15,18]]))
-# print(sln.merge([[1,4],[4,5]]))
-# print(sln.merge([[1,2],[2,3]]))
+sln = Solution_AfterNeet()
+print(sln.merge([[1,3],[1,5],[6,7]]))
+print(sln.merge([[1,3],[2,6],[8,10],[15,18]]))
+print(sln.merge([[1,4],[4,5]]))
+print(sln.merge([[1,2],[2,3]]))
 
 # print(sln.merge([[2,3],[2,2],[3,3],[1,3],[5,7],[2,2],[4,6]]))
 
-print(sln.merge([[0,2],[2,3],[4,4],[0,1],[5,7],[4,5],[0,0]]))
+# print(sln.merge([[0,2],[2,3],[4,4],[0,1],[5,7],[4,5],[0,0]]))
 
 
 
