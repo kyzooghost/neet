@@ -1,5 +1,6 @@
 # Hmm - using a list instead of a hashmap?
 # Lol Leetcode likes the sparse list of 26 vs dict - 68% runtime and 58% memory
+# Ahh, it's O(26N) even with dict because is_substring_permutation is constant time operation
 class Solution_V3:
     def checkInclusion(self, s1: str, s2: str) -> bool:
         # Edge case
