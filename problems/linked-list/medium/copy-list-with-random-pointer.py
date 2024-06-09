@@ -7,6 +7,31 @@ class Node:
         self.random = random
 """
 
+# So Neet's solution is the same core concept, slightly cleaner implementation
+# 86% runtime, 15% memory
+class Solution_V2(object):
+    def copyRandomList(self, head):
+        """
+        :type head: Node
+        :rtype: Node
+        """
+        old_to_new = {}
+        old_to_new[None] = None
+
+        ptr = head
+        while ptr:
+            old_to_new[ptr] = Node(ptr.val)
+            ptr = ptr.next
+        
+        ptr = head
+        while ptr:
+            ptr_new = old_to_new[ptr]
+            ptr_new.next = old_to_new[ptr.next]
+            ptr_new.random = old_to_new[ptr.random]
+            ptr = ptr.next
+
+        return old_to_new[head]
+
 # Just need a way of being able to hash a node
 # Ok got it within 19 minutes, 35% runtime, 37% memory
 # Failed first submission because didn't account for head == None edge case
