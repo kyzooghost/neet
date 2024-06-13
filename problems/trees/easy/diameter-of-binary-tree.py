@@ -7,6 +7,7 @@
 
 # We can solve with DFS, we want to find the depth of left subtree and right subtree
 # Yea ok, it's easiest to work out DFS algorithm here by working from a leaf node, rather than the root node
+# 64% runtime, 24% memory
 class Solution_V2(object):
     def diameterOfBinaryTree(self, root):
         """
