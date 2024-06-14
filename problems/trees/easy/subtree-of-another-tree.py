@@ -1,3 +1,45 @@
+# 98% runtime, 34% memory
+# Ok first re-attempt of a problem
+# Definitely improvement over the first attempt for this problem
+# Not as clean as post-Neet solutions hmm
+# I guess I was reaching for an optimization, which is to only do the dfs_compare call on a node with same subtree size and val
+# I got the same dfs_compare logic
+class Solution_V2(object):
+    def isSubtree(self, root, subRoot):
+        """
+        :type root: TreeNode
+        :type subRoot: TreeNode
+        :rtype: bool
+        """
+        self.resp = False
+        # Get subtree size
+        def dfs(ptr):
+            if not ptr: return 0
+            subtree_size = 1 + dfs(ptr.left) + dfs(ptr.right)
+            return subtree_size
+        
+        subroot_size = dfs(subRoot)
+
+        def dfs_compare(ptr1, ptr2):
+            if not ptr1 and not ptr2:
+                return True
+            elif ptr1 and ptr2 and ptr1.val == ptr2.val:
+                return dfs_compare(ptr1.left, ptr2.left) and dfs_compare(ptr1.right, ptr2.right)
+            else:
+                return False
+
+        # Dfs through root,
+        def dfs_root(ptr):
+            if not ptr: return 0
+            subtree_size = 1 + dfs_root(ptr.left) + dfs_root(ptr.right)
+            if ptr.val == subRoot.val and subtree_size == subroot_size:
+                self.resp = self.resp or dfs_compare(ptr, subRoot)
+            return subtree_size
+
+        dfs_root(root)
+
+        return self.resp
+
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, val=0, left=None, right=None):
