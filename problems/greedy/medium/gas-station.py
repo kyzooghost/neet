@@ -1,3 +1,29 @@
+# 46% runtime, 55% memory
+# Correct intuition is - if diff_sum < 0 there is no solution, else there is definitely a solution
+# No need to find the 'minimum running diff_sum', greedily assume that your current i is the solution
+# If disproved, start again from the next i
+# No need to start again from any already visited i, because you must have started a streak from a positive, so nothing in between can result in a larger diff_max up to the current i
+# O(1) space greedy solution is quite tricky tbh
+# I could find O(N) space - the soution is the i to the right of the minimum running diff_sum.
+class Solution_V2(object):
+    def canCompleteCircuit(self, gas, cost):
+        """
+        :type gas: List[int]
+        :type cost: List[int]
+        :rtype: int
+        """
+        diff_sum, running_sum, resp = 0, 0, 0
+        for i in range(len(gas)):
+            diff = gas[i] - cost[i]
+            diff_sum += diff
+            running_sum += diff
+            if running_sum < 0:
+                running_sum = 0
+                resp = i + 1
+        
+        if diff_sum < 0: return -1
+        return resp if resp < len(gas) else 0
+
 # Guaranteed to have a unique solution
 # Eih got a successful submission to Neet in 33 minutes, failed on 39/40th test case of Leetcode...very close, just need to address an edge case
 # Ok 39% runtime, 10% memory, glad that I got it, but still took an hour zzz. Lol addressing the edge case was just converting < to <=, and people in Leetcode dicussion are complaining about this test case. So we can count this as done in 30 minutes.
