@@ -1,6 +1,6 @@
 # Guaranteed to have a unique solution
 # Eih got a successful submission to Neet in 33 minutes, failed on 39/40th test case of Leetcode...very close, just need to address an edge case
-# Ok 39% runtime, 10% memory, glad that I got it, but still took an hour zzz
+# Ok 39% runtime, 10% memory, glad that I got it, but still took an hour zzz. Lol addressing the edge case was just converting < to <=, and people in Leetcode dicussion are complaining about this test case. So we can count this as done in 30 minutes.
 class Solution(object):
     def canCompleteCircuit(self, gas, cost):
         """
