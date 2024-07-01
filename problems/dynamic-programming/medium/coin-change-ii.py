@@ -1,3 +1,22 @@
+# 60% runtime, 65% memory, this question is gg
+class Solution_AfterNeet(object):
+    def change(self, amount, coins):
+        """
+        :type amount: int
+        :type coins: List[int]
+        :rtype: int
+        """
+        # Ok similar approach, but we only need 1D array
+        dp = [0 for _ in range(amount + 1)]
+        dp[0] = 1
+        
+        for coin in coins:
+            for intermediate_amount in range(1, amount + 1):
+                prev_amount = intermediate_amount - coin
+                if prev_amount >= 0:
+                    dp[intermediate_amount] += dp[prev_amount]
+        return dp[amount]
+
 # I think this is almost the same as coin-change-i
 # Ok...I don't know how long I took to get this question, did it over standup, so maybe did it in 40 minutes
 # Runtime 27%, memory 25%, maybe ~40 minutes
