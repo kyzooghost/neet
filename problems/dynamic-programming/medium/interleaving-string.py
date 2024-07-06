@@ -1,4 +1,28 @@
 
+class Solution_V2(object):
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if len(s1) + len(s2) != len(s3): return False
+        dp = {}
+        def dfs(i, j):
+            if i == len(s1) and j == len(s2): return True
+            if (i, j) in dp: return dp[(i, j)]
+            r1, r2 = False, False
+            if i < len(s1) and s3[i + j] == s1[i]:
+                r1 = dfs(i + 1, j)
+            if j < len(s2) and s3[i + j] == s2[j]:
+                r2 = dfs(i, j + 1)
+            resp = r1 or r2
+            dp[(i, j)] = resp
+            return resp
+        
+        return dfs(0, 0)
+
 # Hmm...this is meant to be a 2D DP problem?
 # No idea what your dp would be lmao...
 # Ok...how can you brute force this?
