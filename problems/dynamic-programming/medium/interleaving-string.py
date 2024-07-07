@@ -1,3 +1,50 @@
+# Hmm...still tough to think about it backwards imo
+# More straightforward to run through a decision tree using DFS, and cache the positions
+class Solution_V3(object):
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if len(s1) + len(s2) != len(s3): return False
+        dp = [[False for _ in range(len(s2) + 1)] for _ in range(len(s1) + 1)]
+        dp[len(s1)][len(s2)] = True
+
+        for i in range(len(s1), -1, -1):
+            for j in range(len(s2), -1, -1):
+                down, right = False, False
+                if i < len(s1) and s1[i] == s3[i + j] and dp[i+1][j]: down = True
+                if j < len(s2) and s2[j] == s3[i + j] and dp[i][j+1]: right = True
+                dp[i][j] = dp[i][j] or down or right
+        return dp[0][0]
+
+class Solution_V2(object):
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if len(s1) + len(s2) != len(s3): return False
+        # O(MN) space, O(MN) time
+        # Brute force is O(2^(M + N))
+        dp = {}
+        def dfs(i, j):
+            if i == len(s1) and j == len(s2): return True
+            if (i, j) in dp: return dp[(i, j)]
+            r1, r2 = False, False
+            if i < len(s1) and s3[i + j] == s1[i]:
+                r1 = dfs(i + 1, j)
+            if j < len(s2) and s3[i + j] == s2[j]:
+                r2 = dfs(i, j + 1)
+            resp = r1 or r2
+            dp[(i, j)] = resp
+            return resp
+        
+        return dfs(0, 0)
 
 # Hmm...this is meant to be a 2D DP problem?
 # No idea what your dp would be lmao...
