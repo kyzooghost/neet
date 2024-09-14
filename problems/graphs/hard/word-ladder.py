@@ -187,5 +187,45 @@ class Solution_V3(object):
                         queue.append(next_index)
         return 0
 
-sln = Solution_V3()
+# 68% runtime, 25% memory
+class Solution_AfterNeet(object):
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: int
+        """
+        # Avoid handling word outside of wordList
+        wordList = [beginWord] + wordList
+        visited = set()
+        edges = defaultdict(list)
+
+        # Dang Python
+        if endWord not in wordList: return 0
+        
+        # O(MN) create pattern -> word map
+        # Interesting, not a conventional adjacency list, but everything with same pattern will have edge to each other
+        patterns = defaultdict(list)
+        for word in wordList:
+            for j in range(len(word)):
+                pattern = word[:j] + "*" + word[j+1:]
+                patterns[pattern].append(word)
+        
+        queue = deque([beginWord])
+        resp = 0
+        while queue:
+            resp += 1
+            for _ in range(len(queue)):
+                word = queue.popleft()
+                if word == endWord: return resp
+                for j in range(len(word)):
+                    pattern = word[:j] + "*" + word[j+1:]
+                    for next_word in patterns[pattern]:
+                        if next_word not in visited:
+                            visited.add(next_word)
+                            queue.append(next_word)
+        return 0
+
+sln = Solution_AfterNeet()
 print(sln.ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]))
