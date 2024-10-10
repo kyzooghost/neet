@@ -1,6 +1,9 @@
+
+
 # All possible lists of substrings
 # Single letter by itself is a substring
 # Cool, 40% runtime, 51% memory in 17.5 minutes. But zz got hit by a silly edge case
+# O(2 ** n)
 class Solution(object):
     def partition(self, s):
         """
